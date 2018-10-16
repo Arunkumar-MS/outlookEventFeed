@@ -59,7 +59,6 @@ app.post('/V1/feed', function (req, res) {
 		status = 200;
 	} else {
 		//  websocket code
-		debugger;
 		console.log(req.body.value[0].resourceData);
 		io.emit('outlookData', req.body.value[0].resourceData);
 	}
