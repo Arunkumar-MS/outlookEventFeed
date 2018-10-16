@@ -107,7 +107,7 @@ app.get('/V1/getOutlookfeed', (req, res) => {
 					});
 					user.save();
 				}
-			})
+			});
 
 			getGraphClient(req.query.token)
 				.api('/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location')
@@ -117,6 +117,29 @@ app.get('/V1/getOutlookfeed', (req, res) => {
 				});
 		});
 });
+app.post('/V1/accept', async (req, res) => {
+	    if(!req.body.token){
+	        return res.send('please send valid token');
+	    }
+	    return getGraphClient(req.body.token)
+	    .api(`/me/events/${req.body.id}/accept`)
+	    .version('beta')
+	    .post({}, (err, response) => {
+	        res.send(response.status);
+	    });
+	})
+	
+	app.post('/V1/decline', async (req, res) => {
+	    if(!req.body.token){
+	        return res.send('please send valid token');
+	    }
+	    return getGraphClient(req.body.token)
+	    .api(`/me/events/${req.body.id}/decline`)
+	    .version('beta')
+	    .post({}, (err, response) => {
+	        res.send(response);
+	    });
+	})
 
 // start the server
 http.listen(port);
