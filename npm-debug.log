@@ -1,0 +1,72 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/arunkumar/.nvm/versions/node/v7.2.0/bin/node',
+1 verbose cli   '/Users/arunkumar/.nvm/versions/node/v7.2.0/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'pm2',
+1 verbose cli   '-g' ]
+2 info using npm@3.10.9
+3 info using node@v7.2.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData pm2
+8 silly fetchNamedPackageData pm2
+9 silly mapToRegistry name pm2
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.yarnpkg.com/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'pm2',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   escapedName: 'pm2',
+12 silly mapToRegistry   name: 'pm2',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri https://registry.yarnpkg.com/pm2
+14 verbose request uri https://registry.yarnpkg.com/pm2
+15 verbose request always-auth set; sending authorization
+16 info attempt registry request try #1 at 3:51:30 PM
+17 info retry will retry, error on last attempt: Error: This request requires auth credentials. Run `npm login` and repeat the request.
+18 info attempt registry request try #2 at 3:51:40 PM
+19 info retry will retry, error on last attempt: Error: This request requires auth credentials. Run `npm login` and repeat the request.
+20 info attempt registry request try #3 at 3:52:40 PM
+21 silly fetchPackageMetaData Error: This request requires auth credentials. Run `npm login` and repeat the request.
+21 silly fetchPackageMetaData     at CachingRegistryClient.authify (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/authify.js:17:14)
+21 silly fetchPackageMetaData     at CachingRegistryClient.makeRequest (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:112:17)
+21 silly fetchPackageMetaData     at /Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:66:17
+21 silly fetchPackageMetaData     at RetryOperation._fn (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/attempt.js:18:5)
+21 silly fetchPackageMetaData     at Timeout._onTimeout (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/node_modules/retry/lib/retry_operation.js:68:10)
+21 silly fetchPackageMetaData     at ontimeout (timers.js:365:14)
+21 silly fetchPackageMetaData     at tryOnTimeout (timers.js:237:5)
+21 silly fetchPackageMetaData     at Timer.listOnTimeout (timers.js:207:5)
+21 silly fetchPackageMetaData  error for pm2 Error: This request requires auth credentials. Run `npm login` and repeat the request.
+21 silly fetchPackageMetaData     at CachingRegistryClient.authify (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/authify.js:17:14)
+21 silly fetchPackageMetaData     at CachingRegistryClient.makeRequest (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:112:17)
+21 silly fetchPackageMetaData     at /Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:66:17
+21 silly fetchPackageMetaData     at RetryOperation._fn (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/attempt.js:18:5)
+21 silly fetchPackageMetaData     at Timeout._onTimeout (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/node_modules/retry/lib/retry_operation.js:68:10)
+21 silly fetchPackageMetaData     at ontimeout (timers.js:365:14)
+21 silly fetchPackageMetaData     at tryOnTimeout (timers.js:237:5)
+21 silly fetchPackageMetaData     at Timer.listOnTimeout (timers.js:207:5)
+22 silly rollbackFailedOptional Starting
+23 silly rollbackFailedOptional Finishing
+24 silly runTopLevelLifecycles Finishing
+25 silly install printInstalled
+26 verbose stack Error: This request requires auth credentials. Run `npm login` and repeat the request.
+26 verbose stack     at CachingRegistryClient.authify (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/authify.js:17:14)
+26 verbose stack     at CachingRegistryClient.makeRequest (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:112:17)
+26 verbose stack     at /Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:66:17
+26 verbose stack     at RetryOperation._fn (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/attempt.js:18:5)
+26 verbose stack     at Timeout._onTimeout (/Users/arunkumar/.nvm/versions/node/v7.2.0/lib/node_modules/npm/node_modules/npm-registry-client/node_modules/retry/lib/retry_operation.js:68:10)
+26 verbose stack     at ontimeout (timers.js:365:14)
+26 verbose stack     at tryOnTimeout (timers.js:237:5)
+26 verbose stack     at Timer.listOnTimeout (timers.js:207:5)
+27 verbose cwd /Users/arunkumar/Documents/hack week/outlookEventFeed
+28 error Darwin 17.6.0
+29 error argv "/Users/arunkumar/.nvm/versions/node/v7.2.0/bin/node" "/Users/arunkumar/.nvm/versions/node/v7.2.0/bin/npm" "install" "pm2" "-g"
+30 error node v7.2.0
+31 error npm  v3.10.9
+32 error This request requires auth credentials. Run `npm login` and repeat the request.
+33 error If you need help, you may report this error at:
+33 error     <https://github.com/npm/npm/issues>
+34 verbose exit [ 1, true ]

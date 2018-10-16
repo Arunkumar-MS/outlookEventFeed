@@ -7,6 +7,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var cors = require('cors');
 var mongoose = require('mongoose');
+var axios = require('axios');
 var microsoftGraph = require("@microsoft/microsoft-graph-client");
 
 
@@ -18,8 +19,7 @@ app.use(bodyParser.urlencoded({
 
 const Schema = mongoose.Schema;
 const USER = mongoose.model('user', new Schema({
-	id: mongoose.Schema.Types.ObjectId,
-	user_id: String,
+	id: String,
 	token: String,
 }));
 
@@ -59,24 +59,56 @@ app.post('/V1/feed', function (req, res) {
 		status = 200;
 	} else {
 		//  websocket code
-		console.log(req.body.value[0].resourceData);
-		io.emit('outlookData', req.body.value[0].resourceData);
+		const userId = (req.body.value[0].resourceData['@odata.id'] || '').split('/')[1];
+		USER.findOne({
+			id: userId
+		}, (err, userInfo) => {
+			console.log('userInfo', userInfo);
+			const URL = 'https://graph.microsoft.com/v1.0/' + req.body.value[0].resourceData['@odata.id'];
+			console.log(URL);
+
+			axios.get(URL, {
+					headers: {
+						Authorization: `Bearer ${userInfo.token}`
+					}
+				}).then(response => {
+					console.log(response.data);
+					io.emit('outlookData', response.data);
+				})
+				.catch((error) => {
+					console.log('error ' + error);
+				});
+		});
 	}
+	res.send({});
 });
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + `/index.html`);
 });
 
-app.get('/V1/getOutlookfeed', async (req, res) => {
+app.get('/V1/getOutlookfeed', (req, res) => {
+	if (!req.query.token) {
+		return res.send('please send valid token');
+	}
 	return getGraphClient(req.query.token)
 		.api('/me')
 		.get((err, data) => {
-			let user = new USER({
-				user_id: data.id,
-				token: req.query.token,
-			});
-			user.save();
+			USER.findOne({
+				id: data.id
+			}, (err, userData) => {
+				if (userData) {
+					userData.token = req.query.token;
+					userData.save();
+				} else {
+					let user = new USER({
+						id: data.id,
+						token: req.query.token,
+					});
+					user.save();
+				}
+			})
+
 			getGraphClient(req.query.token)
 				.api('/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location')
 				.get((err, events) => {
