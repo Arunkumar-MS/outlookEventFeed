@@ -138,7 +138,18 @@ app.post('/V1/decline', (req, res) => {
 		.post({}, (err, response) => {
 			res.send(response);
 		});
-})
+});
+
+app.get('/V1/getPto', (req, res) => {
+	if(!req.query.token ){
+		return res.send('please send valid token');
+	}
+	return getGraphClient(token)
+	.api('/me/mailboxSettings/automaticRepliesSetting')
+	.get( (err, data) => {
+		res.send(data);
+	});
+});
 
 app.post('/V1/setPto', (req, res) => {
 	if (!req.body.token && !req.body.start && !req.body.end) {
