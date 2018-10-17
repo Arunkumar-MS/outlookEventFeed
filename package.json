@@ -2,7 +2,6 @@
   "name": "express-parameters",
   "main": "server.js",
   "scripts": {
-    "preinstall": "npm install pm2 -g",
     "start": "node server.js"
   },
   "dependencies": {

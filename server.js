@@ -117,29 +117,36 @@ app.get('/V1/getOutlookfeed', (req, res) => {
 				});
 		});
 });
-app.post('/V1/accept', async (req, res) => {
-	    if(!req.body.token){
-	        return res.send('please send valid token');
-	    }
-	    return getGraphClient(req.body.token)
-	    .api(`/me/events/${req.body.id}/accept`)
-	    .version('beta')
-	    .post({}, (err, response) => {
-	        res.send(response.status);
-	    });
-	})
-	
-	app.post('/V1/decline', async (req, res) => {
-	    if(!req.body.token){
-	        return res.send('please send valid token');
-	    }
-	    return getGraphClient(req.body.token)
-	    .api(`/me/events/${req.body.id}/decline`)
-	    .version('beta')
-	    .post({}, (err, response) => {
-	        res.send(response);
-	    });
-	})
+
+app.post('/V1/accept', (req, res) => {
+	if (!req.body.token) {
+		return res.send('please send valid token');
+	}
+	const URL = `https://graph.microsoft.com/v1.0/me/events/${req.body.id}/accept`;
+	return axios.post(URL, {}, {headers: {
+		Authorization: `Bearer ${req.body.token}`
+	}})
+	.then((response) => {
+			console.log(response);
+			res.send(response);
+		})
+		.catch((err) => {
+			console.log(err);
+			res.send(err);
+		});
+})
+
+app.post('/V1/decline', (req, res) => {
+	if (!req.body.token) {
+		return res.send('please send valid token');
+	}
+	return getGraphClient(req.body.token)
+		.api(`/me/events/${req.body.id}/decline`)
+		.version('beta')
+		.post({}, (err, response) => {
+			res.send(response);
+		});
+})
 
 // start the server
 http.listen(port);
