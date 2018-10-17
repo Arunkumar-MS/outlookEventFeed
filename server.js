@@ -7,10 +7,12 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var cors = require('cors');
 var mongoose = require('mongoose');
+var moment = require('moment-timezone');
 var axios = require('axios');
 var microsoftGraph = require("@microsoft/microsoft-graph-client");
 
 let SF_MEM_CACHE = {};
+let EVENTS = [];
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
@@ -118,6 +120,8 @@ app.get('/V1/getOutlookfeed', (req, res) => {
 						return item;
 					});
 					events.value = eventData;
+					EVENTS = events.value;
+					
 					res.send(events);
 				});
 		});
@@ -258,3 +262,32 @@ function getGraphClient(accessToken) {
 		}
 	});
 }
+
+
+//Long polling
+function pushreminder(){
+	const currentEvent = EVENTS.filter(item=> {
+		const start = moment.utc(item.start.dateTime).local();
+		return start.isAfter(moment().utc().local()) && start.isBefore(moment().utc().local().add(15,'minute'));
+	});
+	console.log(currentEvent);
+	if(currentEvent.length){
+		console.log('------------');
+		
+		io.emit('outlookReminder', currentEvent);
+	}
+
+// const localDate = moment.utc('2018-10-17T19:00:00.0000000').local();
+// console.log( 'local utc', moment().utc().local());
+
+// console.log('email',localDate)
+
+// console.log(localDate.isAfter(moment().utc().local()))
+
+// console.log('15 added',moment().utc().local().add(15,'minute'))
+
+// console.log('15', localDate.isBefore(moment().utc().local().add(15,'minute')));
+
+}
+
+setInterval(pushreminder, 6000);

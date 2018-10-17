@@ -5,10 +5,11 @@
         Setup meeting invite to aparnajoshi@eduforhack.onmicrosoft.com or other subscribed id's and response form graph API appears here.
     </h1>
     <span id='app'> Event data</span>
+    <span id='app1'> reminder data</span>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js">
     </script>
     <script>
-        var socket = io.connect('https://outlookfeed.herokuapp.com');
+        var socket = io.connect('http://localhost:8080');
         socket.on('connect', function (data) {
             socket.emit('join', 'Hello World from client');
         });
@@ -16,6 +17,11 @@
             console.log(data);
             document.getElementById('app').innerHTML = JSON.stringify(data);
         });
+        socket.on('outlookReminder', function (data) {
+            console.log(data);
+            document.getElementById('app1').innerHTML = JSON.stringify(data);
+        });
+        
     </script>
 
 </body>

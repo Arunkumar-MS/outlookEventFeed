@@ -10,6 +10,7 @@
     "body-parser": "~1.9.2",
     "cors": "^2.8.4",
     "express": "~4.10.2",
+    "moment-timezone": "^0.5.21",
     "mongoose": "^5.3.4",
     "socket.io": "^2.1.1"
   },
