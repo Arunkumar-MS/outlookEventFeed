@@ -40,17 +40,11 @@ mongoose.connect(COMPOSE_URI_DEFAULT, connectionOptions, function (error) {
 const conn = mongoose.connection;
 conn.on('error', console.error.bind(console, 'connection error:'));
 
-
 io.on('connection', function (client) {
 	client.on('join', function (data) {
 		console.log(data);
 	});
-	client.on('messages', function (data) {
-		client.emit('broad', data);
-		client.broadcast.emit('broad', data);
-	});
 });
-
 
 app.post('/V1/feed', function (req, res) {
 	if (req.query && req.query.validationToken) {
@@ -63,16 +57,13 @@ app.post('/V1/feed', function (req, res) {
 		USER.findOne({
 			id: userId
 		}, (err, userInfo) => {
-			console.log('userInfo', userInfo);
 			const URL = 'https://graph.microsoft.com/v1.0/' + req.body.value[0].resourceData['@odata.id'];
-			console.log(URL);
-
 			axios.get(URL, {
 					headers: {
 						Authorization: `Bearer ${userInfo.token}`
 					}
 				}).then(response => {
-					console.log(response.data);
+					console.log('================== emiting the outlookData events ==================');
 					io.emit('outlookData', response.data);
 				})
 				.catch((error) => {
@@ -129,7 +120,6 @@ app.post('/V1/accept', (req, res) => {
 			}
 		})
 		.then((response) => {
-			console.log(response);
 			res.send(response);
 		})
 		.catch((err) => {
