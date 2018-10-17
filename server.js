@@ -112,6 +112,11 @@ app.get('/V1/getOutlookfeed', (req, res) => {
 				.api('/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location,responseStatus')
 				.get((err, events) => {
 					events.userId = data.id;
+					const eventData = (events.value || []).map(item => {
+						item.sfId = (SF_MEM_CACHE[data.id + item.id] || {})['sfid'] || null;
+						return item;
+					});
+					events.value = eventData;
 					res.send(events);
 				});
 		});
