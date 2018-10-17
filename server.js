@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var axios = require('axios');
 var microsoftGraph = require("@microsoft/microsoft-graph-client");
 
-
+let SF_MEM_CACHE = {};
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
@@ -44,6 +44,14 @@ io.on('connection', function (client) {
 	client.on('join', function (data) {
 		console.log(data);
 	});
+});
+
+app.post('/V1/sf', (req, res) => {
+	SF_MEM_CACHE[req.body.id + req.body.eventId] = {
+		sfid: req.body.sfId,
+		evntId: req.body.eventId
+	};
+	res.send(SF_MEM_CACHE);
 });
 
 app.post('/V1/feed', function (req, res) {
@@ -141,14 +149,14 @@ app.post('/V1/decline', (req, res) => {
 });
 
 app.get('/V1/getPto', (req, res) => {
-	if(!req.query.token ){
+	if (!req.query.token) {
 		return res.send('please send valid token');
 	}
 	return getGraphClient(token)
-	.api('/me/mailboxSettings/automaticRepliesSetting')
-	.get( (err, data) => {
-		res.send(data);
-	});
+		.api('/me/mailboxSettings/automaticRepliesSetting')
+		.get((err, data) => {
+			res.send(data);
+		});
 });
 
 app.post('/V1/setPto', (req, res) => {
