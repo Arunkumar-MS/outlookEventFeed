@@ -110,7 +110,7 @@ app.get('/V1/getOutlookfeed', (req, res) => {
 			});
 
 			getGraphClient(req.query.token)
-				.api('/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location')
+				.api('/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location,responseStatus')
 				.get((err, events) => {
 					events.userId = data.id;
 					res.send(events);
