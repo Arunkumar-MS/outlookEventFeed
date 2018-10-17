@@ -47,8 +47,9 @@ io.on('connection', function (client) {
 });
 
 app.post('/V1/sf', (req, res) => {
+	const hasId = SF_MEM_CACHE[req.body.id + req.body.eventId]; 
 	SF_MEM_CACHE[req.body.id + req.body.eventId] = {
-		sfid: req.body.sfId,
+		sfid: hasId ? hasId.sfid+'|'+req.body.sfId : req.body.sfId,
 		evntId: req.body.eventId
 	};
 	res.send(SF_MEM_CACHE);
