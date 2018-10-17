@@ -123,10 +123,12 @@ app.post('/V1/accept', (req, res) => {
 		return res.send('please send valid token');
 	}
 	const URL = `https://graph.microsoft.com/v1.0/me/events/${req.body.id}/accept`;
-	return axios.post(URL, {}, {headers: {
-		Authorization: `Bearer ${req.body.token}`
-	}})
-	.then((response) => {
+	return axios.post(URL, {}, {
+			headers: {
+				Authorization: `Bearer ${req.body.token}`
+			}
+		})
+		.then((response) => {
 			console.log(response);
 			res.send(response);
 		})
@@ -134,7 +136,7 @@ app.post('/V1/accept', (req, res) => {
 			console.log(err);
 			res.send(err);
 		});
-})
+});
 
 app.post('/V1/decline', (req, res) => {
 	if (!req.body.token) {
@@ -147,6 +149,86 @@ app.post('/V1/decline', (req, res) => {
 			res.send(response);
 		});
 })
+
+app.post('/V1/setPto', (req, res) => {
+	if (!req.body.token && !req.body.start && !req.body.end) {
+		return res.send('please send valid token or valid start and end date');
+	}
+	setAutomaticReply(req.body.token, res, req.body.start, req.body.end);
+	return sendMail(req.body.token, res, req.body.start, req.body.end);
+})
+
+function setAutomaticReply(token, res, start, end) {
+	const automaticReply = {
+		status: "scheduled",
+		externalAudience: "all",
+		scheduledStartDateTime: {
+			dateTime: start + "T02:00:00.0000000",
+			timeZone: "UTC"
+		},
+		scheduledEndDateTime: {
+			dateTime: end + "T02:00:00.0000000",
+			timeZone: "UTC"
+		},
+		internalReplyMessage: "<html>\n<body>\n<p>I'm out of office please contact my Manager for the follow up.<br>\n</p></body>\n</html>\n",
+		externalReplyMessage: "<html>\n<body>\n<p>I'm out of office please contact citrix workspace helpdesk for any issues.<br>\n</p></body>\n</html>\n"
+	}
+	return getGraphClient(token)
+		.api('/me/mailboxSettings')
+		.patch({
+			automaticRepliesSetting: automaticReply
+		}, (err, response) => {
+			console.log(response);
+		})
+}
+
+function sendMail(token, res, start, end) {
+	startDateString = formatDate(new Date(`${start}`))
+	endDateString = formatDate(new Date(`${end}`))
+	const mail = {
+		subject: "On PTO from " + startDateString + " to " + endDateString,
+		toRecipients: [{
+				emailAddress: {
+					address: "nimish.agarwal@citrix.com"
+				}
+			},
+			{
+				emailAddress: {
+					address: "arunkumar.ms@citrix.com"
+				}
+			},
+			{
+				emailAddress: {
+					address: "nikhil.roopsinghchavan@citrix.com"
+				}
+			}
+		],
+		body: {
+			content: "I will be on leave from " + startDateString + " to " + endDateString + ". Please call me for anything urgent.",
+			contentType: "text"
+		}
+	}
+	return getGraphClient(token)
+		.api('/me/sendMail')
+		.post({
+			message: mail
+		}, (err, response) => {
+			res.send(response);
+		});
+}
+
+function formatDate(date) {
+	var monthNames = [
+		"Jan", "Feb", "March",
+		"April", "May", "June", "July",
+		"August", "Sept", "Oct",
+		"Nov", "Dec"
+	];
+	var day = date.getDate();
+	var monthIndex = date.getMonth();
+	var year = date.getFullYear();
+	return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
 
 // start the server
 http.listen(port);
